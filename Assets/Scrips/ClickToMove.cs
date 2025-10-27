@@ -1,37 +1,41 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.AI;
 
 public class ClickToMove : MonoBehaviour
 {
     [Header ("Movement Control")]
-    [SerializeField] private float moveSpeed;
-
     Rigidbody rb;
 
     Vector3 destination;
     [SerializeField] Transform destinoDummie;
+    NavMeshAgent agent;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        agent = GetComponent<NavMeshAgent>();
+        
+        agent.destination = destinoDummie.position;
     }
     void Update()
     {
-        destination = destinoDummie.position;
         if (Input.GetMouseButtonDown(1))
         {
+            
             HandleClick();
         }
     }
     private void HandleClick()
     {
-        StartCoroutine(MoveToPosition(destination));   
-    }
+        RaycastHit hit;
 
-    IEnumerator MoveToPosition (Vector3 _destination)
-    {
-        Vector3 moveDirection = _destination - transform.position;
-        rb.AddForce(moveDirection * moveSpeed, ForceMode.VelocityChange);
-        yield return null;
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100f))
+        {
+            destinoDummie.position = hit.point;
+            agent.destination = destinoDummie.position;
+        }
+        //StartCoroutine(MoveToPosition(destination));   
     }
 
 }
