@@ -5,18 +5,24 @@ using UnityEngine.AI;
 
 public class ClickToMove : MonoBehaviour
 {
-    [Header ("Movement Control")]
+    [Header("Movement Control")]
+    [SerializeField] private float moveSpeed;
+
     Rigidbody rb;
 
     Vector3 destination;
     [SerializeField] Transform destinoDummie;
     NavMeshAgent agent;
+    Animator animator;
+    private Vector3 velocidadX;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
+        animator = GetComponent<Animator>();
         
-        agent.destination = destinoDummie.position;
+        //agent.destination = destinoDummie.position;
     }
     void Update()
     {
@@ -25,6 +31,10 @@ public class ClickToMove : MonoBehaviour
             
             HandleClick();
         }
+
+        velocidadX = agent.velocity;
+        animator.SetFloat("InputX", agent.velocity.x);
+        animator.SetFloat("InputY", agent.velocity.z);
     }
     private void HandleClick()
     {
