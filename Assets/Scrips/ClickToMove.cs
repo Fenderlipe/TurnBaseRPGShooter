@@ -22,7 +22,8 @@ public class ClickToMove : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         
-        //agent.destination = destinoDummie.position;
+        agent.destination = destinoDummie.position;
+        agent.updatePosition = false;
     }
     void Update()
     {
@@ -32,9 +33,7 @@ public class ClickToMove : MonoBehaviour
             HandleClick();
         }
 
-        velocidadX = agent.velocity;
-        animator.SetFloat("InputX", agent.velocity.x);
-        animator.SetFloat("InputY", agent.velocity.z);
+        animator.SetFloat("forwardMovement", agent.velocity.magnitude);
     }
     private void HandleClick()
     {
@@ -45,7 +44,16 @@ public class ClickToMove : MonoBehaviour
             destinoDummie.position = hit.point;
             agent.destination = destinoDummie.position;
         }
+
         //StartCoroutine(MoveToPosition(destination));   
+    }
+
+    private void OnAnimatorMove()
+    {
+        Vector3 position = animator.rootPosition;
+        position.y = agent.nextPosition.y;
+        transform.position = position;
+        agent.nextPosition = transform.position; 
     }
 
 }
