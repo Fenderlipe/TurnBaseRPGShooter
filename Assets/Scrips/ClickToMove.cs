@@ -43,6 +43,7 @@ public class ClickToMove : MonoBehaviour
         {
             destinoDummie.position = hit.point;
             agent.destination = destinoDummie.position;
+            hit.collider.GetComponent<Unit>();
         }
 
         //StartCoroutine(MoveToPosition(destination));   
