@@ -17969,7 +17969,30 @@ MonoBehaviour:
   characterName: 
   hasActed: 0
   hasAttacked: 0
-  isFriendly: 0
+  isFriendly: 1
+--- !u!136 &206096512
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 206096506}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.95, z: 0}
 --- !u!1 &208325940
 GameObject:
   m_ObjectHideFlags: 0
@@ -103907,7 +103930,30 @@ MonoBehaviour:
   characterName: 
   hasActed: 0
   hasAttacked: 0
-  isFriendly: 0
+  isFriendly: 1
+--- !u!136 &1052379188
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1052379184}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.65
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.4, z: 0}
 --- !u!43 &1053638947
 Mesh:
   m_ObjectHideFlags: 0
@@ -149168,6 +149214,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 100002, guid: 2732fe64dd2799f439fb845921df626b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1052379185}
+    - targetCorrespondingSourceObject: {fileID: 100002, guid: 2732fe64dd2799f439fb845921df626b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1052379188}
   m_SourcePrefab: {fileID: 100100000, guid: 2732fe64dd2799f439fb845921df626b, type: 3}
 --- !u!1 &1441390061
 GameObject:
@@ -175494,6 +175543,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 100166, guid: a5674d01884853d4e8f2386a171e14d9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 206096509}
+    - targetCorrespondingSourceObject: {fileID: 100166, guid: a5674d01884853d4e8f2386a171e14d9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 206096512}
   m_SourcePrefab: {fileID: 100100000, guid: a5674d01884853d4e8f2386a171e14d9, type: 3}
 --- !u!43 &1723009973
 Mesh:
@@ -200499,7 +200551,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d13790f005afcb4b990719e850a4d63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UiUnitSelectionToggle
-  elementsUIToToggle: []
+  elementsUIToToggle:
+  - {fileID: 1841594965}
+  - {fileID: 10323011}
 --- !u!1 &1948997232
 GameObject:
   m_ObjectHideFlags: 0

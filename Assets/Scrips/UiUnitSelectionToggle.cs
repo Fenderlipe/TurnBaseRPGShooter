@@ -13,18 +13,25 @@ public class UiUnitSelectionToggle : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (UnitSelection.Instance == null)
-            return;
-
-        var unitSelected = UnitSelection.Instance.selectedUnit.name;
-        deactivateALLUI();
-
-        if (selectedUnit == null)
-            return;
-
-
-        switch (unitSelected)
+        if (UnitSelection.Instance.selectedUnit == null)
         {
+            deactivateALLUI();
+            return;
+        }
+
+        var selectedUnit = UnitSelection.Instance.selectedUnit;
+        deactivateALLUI();
+       
+
+        switch (selectedUnit.name)
+        {
+            case null:
+                for (int i = 0; i < elementsUIToToggle.Length; i++)
+                {
+                    elementsUIToToggle[i].SetActive(false);
+                    deactivateALLUI();
+                }
+                break;
             case "Ellen":
                 if (elementsUIToToggle.Length > 0)
                     elementsUIToToggle[0].SetActive(true);
@@ -32,7 +39,7 @@ public class UiUnitSelectionToggle : MonoBehaviour
 
             case "Chomper":
                 if (elementsUIToToggle.Length > 1)
-                    elementsUIToToggle[0].SetActive(true);
+                    elementsUIToToggle[1].SetActive(true);
                 break;
 
             default:
@@ -42,6 +49,10 @@ public class UiUnitSelectionToggle : MonoBehaviour
 
     void deactivateALLUI()
     {
+        for (int i = 0; i < elementsUIToToggle.Length; i++)
+        {
+            elementsUIToToggle[i].SetActive(false);
+        }
 
     }
 }

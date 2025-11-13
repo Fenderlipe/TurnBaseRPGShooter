@@ -20,7 +20,7 @@ public class UnitSelection : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (TurnManager.Instance.isPlayerTurn)
+        if (!   TurnManager.Instance.isPlayerTurn)
         {
             return;
         }
@@ -35,6 +35,7 @@ public class UnitSelection : MonoBehaviour
                 if (unit != null && unit.isFriendly && !unit.hasActed)
                 {
                     SelectUnit(unit);
+                    Debug.Log("Ha sido seleccinado" +  unit.name);
                 }
                 else
                 {
