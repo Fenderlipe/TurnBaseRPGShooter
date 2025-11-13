@@ -17542,6 +17542,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00a522b442f30bc409c5d23f818af69f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnitSelection
+  selectedUnit: {fileID: 0}
 --- !u!4 &202380118
 Transform:
   m_ObjectHideFlags: 0
@@ -200461,6 +200462,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1946938156}
+  - component: {fileID: 1946938157}
   m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
@@ -200485,6 +200487,19 @@ Transform:
   - {fileID: 10323012}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1946938157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1946938155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d13790f005afcb4b990719e850a4d63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UiUnitSelectionToggle
+  elementsUIToToggle: []
 --- !u!1 &1948997232
 GameObject:
   m_ObjectHideFlags: 0
