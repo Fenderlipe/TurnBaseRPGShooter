@@ -2,16 +2,31 @@ using UnityEngine;
 
 public class Shooting : MonoBehaviour
 {
-    bool isOnLoS;   
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void Shoot(Vector3 enemyPosition, float weaponRange)
     {
-        
+        if (isOnLoS(enemyPosition, weaponRange))
+        {
+            Debug.Log("Enemigo en linea de tiro");
+        }
+        else
+        {
+            Debug.Log("Enemigo no esta en linea de tiro");
+        }
     }
-
-    // Update is called once per frame
-    void Update()
+    public bool isOnLoS(Vector3  enemyPosition, float weaponRange)
     {
         
+        RaycastHit hit;
+
+        if (Physics.Raycast(transform.position, enemyPosition, out hit, weaponRange))
+        {
+            Character character = hit.collider.GetComponent<Character>();
+
+            if (character != null)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

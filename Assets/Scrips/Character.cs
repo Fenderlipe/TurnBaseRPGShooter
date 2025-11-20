@@ -9,7 +9,7 @@ public class Character : MonoBehaviour
     [Header("character Stats")]
     [SerializeField] float maxLife;
     [SerializeField] float baseAttackDamage;
-    [SerializeField] float armorValue;
+    [SerializeField] protected float armorValue;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

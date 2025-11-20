@@ -9,10 +9,15 @@ public class Unit : MonoBehaviour
     bool hasMoved = false;
     [SerializeField] public bool isFriendly;
     ClickToMove clickToMove;
+    Shooting shooting;
 
     public void Awake()
     {
         clickToMove = GetComponent<ClickToMove>();
+        shooting = GetComponent<Shooting>();
+
+        clickToMove.enabled = false;
+        shooting.enabled = false;
     }
 
 
@@ -40,12 +45,19 @@ public class Unit : MonoBehaviour
 
     public void Attack()
     {
-        if (hasActed)
+        if (hasActed || hasAttacked)
         {
             return;
         }
-        Debug.Log(characterName + " usa la acción Atacar");
-        FinishAttack();
+
+        if (isFriendly)
+        {
+            shooting.enabled = true;
+        }
+        else
+        {
+            Debug.Log("se mueve pero en malvado");
+        }
     }
 
     public void PassTurn()
