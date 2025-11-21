@@ -10,6 +10,7 @@ public class Unit : MonoBehaviour
     [SerializeField] public bool isFriendly;
     ClickToMove clickToMove;
     Shooting shooting;
+    GameObject targetSelection;
 
     public void Awake()
     {
@@ -53,10 +54,12 @@ public class Unit : MonoBehaviour
         if (isFriendly)
         {
             shooting.enabled = true;
+            targetSelection.SetActive(true);
         }
         else
         {
-            Debug.Log("se mueve pero en malvado");
+            Debug.Log(characterName + " usa la accion atacar");
+            FinishAttack();
         }
     }
 

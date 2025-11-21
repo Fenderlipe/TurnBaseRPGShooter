@@ -1,5 +1,7 @@
 using NUnit.Framework;
+using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class TurnManager : MonoBehaviour
@@ -26,6 +28,7 @@ public class TurnManager : MonoBehaviour
     {
         isPlayerTurn = true;
         ResetUnits(playerUnits);
+        UnitSelection.Instance.enabled = true;
 
         Debug.Log("Turno del jugador");
     }
@@ -36,6 +39,16 @@ public class TurnManager : MonoBehaviour
         ResetUnits(playerUnits);
 
         Debug.Log("Turno del enemigo");
+    }
+
+    IEnumerator MostrarTurno(TMP_Text textoUI, string mensaje)
+    {
+        textoUI.text = mensaje;
+        textoUI.gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(3f);
+
+        textoUI.gameObject.SetActive(false);
     }
 
     private void ResetUnits(List<Unit> units)
@@ -51,12 +64,12 @@ public class TurnManager : MonoBehaviour
     {
         foreach (var u in units)
         {
-            if (u.hasActed)
+            if (!u.hasActed)
             {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     public void CheckEndTurn()
