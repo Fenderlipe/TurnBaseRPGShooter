@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
-    [SerializeField] string characterName;
+    [SerializeField] public string characterName;
 
     public bool hasActed = true;
     public bool hasAttacked = false;
