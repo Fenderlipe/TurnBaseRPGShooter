@@ -17,3 +17,4 @@ MonoBehaviour:
   armorPenetration: 0
   magazine: 0
   magazineSize: 0
+  weaponRange: 35
