@@ -6,7 +6,7 @@ public class Unit : MonoBehaviour
 
     public bool hasActed = true;
     public bool hasAttacked = false;
-    bool hasMoved = false;
+    public bool hasMoved = false;
     [SerializeField] public bool isFriendly;
     ClickToMove clickToMove;
     Shooting shooting;
@@ -42,8 +42,8 @@ public class Unit : MonoBehaviour
         else
         {
             Debug.Log("Unidad enemiga corriendo");
-        }
-            Debug.Log(characterName + " usa la acción correr");
+        }    
+        Debug.Log(characterName + " usa la acción correr");
     }
 
     public void Attack()

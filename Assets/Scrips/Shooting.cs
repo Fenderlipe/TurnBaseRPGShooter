@@ -4,6 +4,7 @@ public class Shooting : MonoBehaviour
 {
     [SerializeField]ParticleSystem particleSparks;
 
+
     public void Shoot(Vector3 enemyPosition, float weaponRange)
     {
         if (isOnLoS(enemyPosition, weaponRange))
