@@ -23,12 +23,6 @@ public class Unit : MonoBehaviour
         shooting.enabled = false;
     }
 
-
-    void Update()
-    {
-
-    }
-
     public void Run()
     {
         if (hasActed || hasMoved)
@@ -61,9 +55,11 @@ public class Unit : MonoBehaviour
         }
         else
         {
-            Debug.Log(characterName + " usa la accion atacar");
-            FinishAttack();
+            Debug.Log("Ataca pero en malvado");
         }
+
+        Debug.Log(characterName + " usa la accion atacar");
+        FinishAttack();
     }
 
     public void PassTurn()
@@ -88,12 +84,25 @@ public class Unit : MonoBehaviour
     {
         clickToMove.enabled = false;
         hasMoved = true;
+        if (!isFriendly)
+        {
+            FinishAction();
+        }
     }
 
     public void FinishAttack()
     {
         playerCharacter.targetSelectionPanel.SetActive(false);
         hasAttacked = true;
+        if (!isFriendly)
+        {
+            playerCharacter.targetSelectionPanel.SetActive(false);
+        }
+
+        /*if (!isFriendly)
+        {
+            FinishAction();
+        }*/
     }
 
     public void FinishAction()

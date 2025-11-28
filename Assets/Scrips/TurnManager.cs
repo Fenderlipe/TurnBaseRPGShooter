@@ -38,17 +38,14 @@ public class TurnManager : MonoBehaviour
         isPlayerTurn = false;
         ResetUnits(playerUnits);
 
+        foreach (Unit u in enemyUnits)
+        {
+            EnemyAI ai = u.GetComponent<EnemyAI>();
+            if (ai != null)
+                ai.enabled = true; 
+        }
+
         Debug.Log("Turno del enemigo");
-    }
-
-    IEnumerator MostrarTurno(TMP_Text textoUI, string mensaje)
-    {
-        textoUI.text = mensaje;
-        textoUI.gameObject.SetActive(true);
-
-        yield return new WaitForSeconds(3f);
-
-        textoUI.gameObject.SetActive(false);
     }
 
     private void ResetUnits(List<Unit> units)
