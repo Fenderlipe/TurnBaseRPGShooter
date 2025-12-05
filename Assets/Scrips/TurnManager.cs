@@ -1,17 +1,18 @@
 using NUnit.Framework;
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
+using TMPro;
+using System.Collections;
 
 public class TurnManager : MonoBehaviour
 {
-
     public static TurnManager Instance;
     public bool isPlayerTurn = true;
 
     public List<Unit> enemyUnits = new List<Unit>();
     public List<Unit> playerUnits = new List<Unit>();
+
+    public TMP_Text turnoAliado, turnoEnemigo;
 
     private void Awake()
     {
@@ -23,37 +24,63 @@ public class TurnManager : MonoBehaviour
         StartPlayerTurn();
     }
 
-
     private void StartPlayerTurn()
     {
         isPlayerTurn = true;
         ResetUnits(playerUnits);
         UnitSelection.Instance.enabled = true;
-
-        Debug.Log("Turno del jugador");
+        StartCoroutine(MostrarTurno(turnoAliado, "Turno de los aliados"));
     }
 
     private void StartEnemyTurn()
     {
         isPlayerTurn = false;
-        ResetUnits(playerUnits);
+        ResetUnits(enemyUnits);
+        StartCoroutine(MostrarTurno(turnoEnemigo, "turno de los enemigos"));
 
         foreach (Unit u in enemyUnits)
         {
+            // Solo activar AI de unidades vivas
+            Character character = u.GetComponent<Character>();
+            if (character != null && !character.IsAlive())
+            {
+                u.hasActed = true; // Marcar como actuado si está muerto
+                continue;
+            }
+
             EnemyAI ai = u.GetComponent<EnemyAI>();
             if (ai != null)
-                ai.enabled = true; 
+                ai.enabled = true;
         }
+    }
 
-        Debug.Log("Turno del enemigo");
+    IEnumerator MostrarTurno(TMP_Text textoUI, string mensaje)
+    {
+        textoUI.text = mensaje;
+        textoUI.gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(3f);
+
+        textoUI.gameObject.SetActive(false);
     }
 
     private void ResetUnits(List<Unit> units)
     {
         foreach (Unit unit in units)
         {
-            unit.hasActed = false;
-
+            // Solo resetear unidades vivas
+            Character character = unit.GetComponent<Character>();
+            if (character != null && character.IsAlive())
+            {
+                unit.StartTurnForThisUnit();
+            }
+            else
+            {
+                // Las unidades muertas ya han actuado
+                unit.hasActed = true;
+                unit.hasAttacked = true;
+                unit.hasMoved = true;
+            }
         }
     }
 
@@ -61,6 +88,16 @@ public class TurnManager : MonoBehaviour
     {
         foreach (var u in units)
         {
+            // Verificar si la unidad está viva
+            Character character = u.GetComponent<Character>();
+
+            // Si está muerta, considerarla como que ya actuó
+            if (character != null && !character.IsAlive())
+            {
+                continue; // Ignorar unidades muertas
+            }
+
+            // Si está viva y no ha actuado, el turno no ha terminado
             if (!u.hasActed)
             {
                 return false;
@@ -74,13 +111,26 @@ public class TurnManager : MonoBehaviour
         if (isPlayerTurn)
         {
             if (AllUnitsActed(playerUnits))
-                StartEnemyTurn();
+                StartCoroutine(ChangeTurnAfterDelay(false));
         }
-
         else
         {
             if (AllUnitsActed(enemyUnits))
-                StartPlayerTurn();
+                StartCoroutine(ChangeTurnAfterDelay(true));
+        }
+    }
+
+    private IEnumerator ChangeTurnAfterDelay(bool toPlayerTurn)
+    {
+        yield return new WaitForSeconds(1f);
+
+        if (toPlayerTurn)
+        {
+            StartPlayerTurn();
+        }
+        else
+        {
+            StartEnemyTurn();
         }
     }
 

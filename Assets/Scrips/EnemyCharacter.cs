@@ -5,15 +5,20 @@ public class EnemyCharacter : Character
     [SerializeField] Weapon equippedWeapon;
     [SerializeField] Equipment equippedEquipment;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public Weapon GetEquippedWeapon()
     {
-
+        return equippedWeapon;
     }
 
-    // Update is called once per frame
-    void Update()
+    public override float GetTotalArmor()
     {
+        float totalArmor = 0f;
 
+        if (equippedEquipment != null)
+        {
+            totalArmor = equippedEquipment.GetArmor();
+        }
+
+        return totalArmor;
     }
 }

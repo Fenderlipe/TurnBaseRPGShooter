@@ -6,26 +6,52 @@ public class TargetSelectionAttack : MonoBehaviour
     [SerializeField] GameObject target_2;
     [SerializeField] GameObject characterShooting;
 
-    Shooting shootingComponent;
-    [SerializeField] Weapon Weapon;
-    PlayerCharacter playerCharacter;
+    Shooting shooter;
+    PlayerCharacter playerChar;
 
-    void Start()
+    private void Awake()
     {
-        shootingComponent = characterShooting.GetComponent<Shooting>();
-        playerCharacter = characterShooting.GetComponent<PlayerCharacter>();
+        shooter = characterShooting.GetComponent<Shooting>();
+        playerChar = characterShooting.GetComponent<PlayerCharacter>();
     }
 
     public void ShootTarget1()
     {
-        shootingComponent.Shoot(target_1.transform.position, playerCharacter.EquippedWeapon.WeaponRange);
-        Debug.Log("apunta a" + target_1.name);
+        if (shooter == null) return;
+
+        Vector3 targetPos = target_1.transform.position;
+
+        // Obtener el rango del arma equipada
+        float range = 10f; // Rango por defecto
+        if (playerChar != null)
+        {
+            Weapon equippedWeapon = playerChar.GetEquippedWeapon();
+            if (equippedWeapon != null)
+            {
+                range = equippedWeapon.GetWeaponRange();
+            }
+        }
+
+        shooter.Shoot(targetPos, range);
     }
 
     public void ShootTarget2()
     {
-        shootingComponent.Shoot(target_2.transform.position, playerCharacter.EquippedWeapon.WeaponRange);
-        Debug.Log("apunta a" + target_2.name);
+        if (shooter == null) return;
 
+        Vector3 targetPos = target_2.transform.position;
+
+        // Obtener el rango del arma equipada
+        float range = 10f; // Rango por defecto
+        if (playerChar != null)
+        {
+            Weapon equippedWeapon = playerChar.GetEquippedWeapon();
+            if (equippedWeapon != null)
+            {
+                range = equippedWeapon.GetWeaponRange();
+            }
+        }
+
+        shooter.Shoot(targetPos, range);
     }
 }

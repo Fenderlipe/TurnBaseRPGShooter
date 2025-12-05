@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Weapon_HandGun
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
   weaponName: 
-  weaponDamage: 0
+  weaponDamage: 50
+  weaponPenetration: 0
   armorPenetration: 0
   magazine: 0
   magazineSize: 0

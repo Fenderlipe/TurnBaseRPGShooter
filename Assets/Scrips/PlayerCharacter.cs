@@ -1,38 +1,69 @@
-using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
 
 public class PlayerCharacter : Character
 {
-
     float experience;
+
     [SerializeField] Weapon equippedWeapon;
+
     [SerializeField] Equipment equippedEquipment;
+
     [SerializeField] List<Equipment> equipmentList = new List<Equipment>();
+
+
     [SerializeField] List<Weapon> weaponList = new List<Weapon>();
+
     public GameObject targetSelectionPanel;
-    public Weapon EquippedWeapon => equippedWeapon;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+
     void Start()
     {
-        targetSelectionPanel.SetActive(false);
-        equippedWeapon = weaponList[0];
-        equippedEquipment = equipmentList[0];
+
+        if (equippedWeapon != null)
+            Debug.Log(gameObject.name + " usa el arma fija: " + equippedWeapon.GetWeaponName());
+
+
+        if (equippedEquipment == null && equipmentList.Count > 0)
+            equippedEquipment = equipmentList[0];
+
+
+        if (targetSelectionPanel != null)
+            targetSelectionPanel.SetActive(false);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
 
+    public Weapon GetEquippedWeapon()
+    {
+        return equippedWeapon;
     }
 
-    void Earnexperience(float expGain)
+
+
+    public void EquipWeapon(int weaponIndex)
     {
-        experience += expGain;
+        Debug.LogWarning(gameObject.name + " no puede cambiar de arma.");
+        return;
     }
 
-    void LevelUp()
+
+
+    public List<Weapon> GetWeaponList()
     {
-        level++;
+        return new List<Weapon>();
+    }
+
+
+    public override float GetTotalArmor()
+    {
+        if (equippedEquipment == null && equipmentList.Count > 0)
+            equippedEquipment = equipmentList[0];
+
+        float totalArmor = 0f;
+
+        if (equippedEquipment != null)
+            totalArmor = equippedEquipment.GetArmor();
+
+        return totalArmor;
     }
 }

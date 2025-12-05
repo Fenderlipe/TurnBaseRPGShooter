@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using TMPro;
 
 [RequireComponent(typeof(Unit))]
 [RequireComponent(typeof(Shooting))]
@@ -15,10 +16,11 @@ public class EnemyAI : MonoBehaviour
     private bool isActing = false;
     NavMeshAgent agent;
     Animator animator;
+    public TMP_Text EvilAttack;
 
     void Start()
     {
-        attackRange = weaponRange;
+        UpdateAttackRange();
     }
 
     private void Awake()
@@ -29,16 +31,46 @@ public class EnemyAI : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
+    private void UpdateAttackRange()
+    {
+        EnemyCharacter enemyChar = GetComponent<EnemyCharacter>();
+        if (enemyChar != null)
+        {
+            Weapon equippedWeapon = enemyChar.GetEquippedWeapon();
+            if (equippedWeapon != null)
+            {
+                attackRange = equippedWeapon.GetWeaponRange();
+            }
+            else
+            {
+                attackRange = 5f;
+            }
+        }
+        else
+        {
+            attackRange = 5f;
+        }
+    }
+
     void Update()
     {
         if (unit.isFriendly) return;
+
+        Character character = GetComponent<Character>();
+        if (character != null && !character.IsAlive())
+        {
+            if (agent != null)
+                agent.enabled = false;
+            return;
+        }
 
         if (TurnManager.Instance.isPlayerTurn)
         {
             return;
         }
 
-        if (!isActing)
+        // CAMBIO IMPORTANTE: Verificar también si ya ha actuado
+        if (!isActing && !unit.hasActed)
         {
             StartCoroutine(DoenemyTurn());
         }
@@ -47,6 +79,16 @@ public class EnemyAI : MonoBehaviour
     IEnumerator DoenemyTurn()
     {
         isActing = true;
+
+        Character character = GetComponent<Character>();
+        if (character != null && !character.IsAlive())
+        {
+            Debug.Log(unit.characterName + " está muerto, pasa turno");
+            unit.FinishAction(); // IMPORTANTE: Marcar que terminó ANTES de desactivar
+            isActing = false;
+            gameObject.SetActive(false);
+            yield break;
+        }
 
         Unit target = FindClosestPlayerUnit();
 
@@ -64,14 +106,13 @@ public class EnemyAI : MonoBehaviour
         if (distanceToTarget <= attackRange && hasLineOfSight(target))
         {
             yield return AttackTarget(target);
-            unit.FinishAction();
         }
         else
         {
             // Moverse hacia el objetivo
             yield return MoveTowardTarget(target.transform.position);
 
-            // Intentar atacar otra vez
+            // Recalcular distancia después de moverse
             distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
 
             if (distanceToTarget <= attackRange && hasLineOfSight(target))
@@ -79,13 +120,15 @@ public class EnemyAI : MonoBehaviour
                 yield return AttackTarget(target);
             }
         }
+
+        // CAMBIO: Solo llamar a FinishAction una vez al final
         unit.FinishAction();
         isActing = false;
     }
 
     private IEnumerator MoveTowardTarget(Vector3 targetPosition)
     {
-        Debug.Log(unit.characterName + " se mueve buscando a su objetivo:");
+        Debug.Log(unit.characterName + " se mueve buscando a su objetivo");
 
         agent.isStopped = false;
         agent.destination = targetPosition;
@@ -112,27 +155,67 @@ public class EnemyAI : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(lookDir);
         }
 
-        shooting.Shoot(target.transform.position, attackRange);
-        yield return new WaitForSeconds(0.2f);
+        EnemyCharacter enemyChar = GetComponent<EnemyCharacter>();
+        float damageDealt = 10f;
+        float penetration = 0f;
+        string weaponUsed = "puño";
 
+        if (enemyChar != null)
+        {
+            Weapon equippedWeapon = enemyChar.GetEquippedWeapon();
+            if (equippedWeapon != null)
+            {
+                damageDealt = equippedWeapon.GetWeaponDamage();
+                penetration = equippedWeapon.GetWeaponPenetration();
+                weaponUsed = equippedWeapon.GetWeaponName();
+            }
+        }
+
+        shooting.Shoot(target.transform.position, attackRange);
+
+        Character targetCharacter = target.GetComponent<Character>();
+        if (targetCharacter != null)
+        {
+            targetCharacter.TakeDamage(damageDealt, penetration);
+
+            if (!targetCharacter.IsAlive())
+            {
+                Debug.Log(target.characterName + " ha muerto por ataque de " + unit.characterName);
+                target.enabled = false;
+                target.gameObject.SetActive(false);
+            }
+            else
+            {
+                Debug.Log(unit.characterName + " causa " + damageDealt + " de daño a " + target.characterName + " con " + weaponUsed);
+            }
+        }
+
+        yield return new WaitForSeconds(0.1f);
+
+        StartCoroutine(AttackinEvil(EvilAttack, "el enemigo ha atacado"));
+
+        // CAMBIO: Marcar que ha atacado
         unit.FinishAttack();
     }
 
     private bool hasLineOfSight(Unit target)
     {
-        return shooting.isOnLoS(target.transform.position, weaponRange);
+        return shooting.IsOnLoS(target.transform.position, weaponRange);
     }
-
 
     private Unit FindClosestPlayerUnit()
     {
-
-
         Unit closest = null;
         float closestDist = Mathf.Infinity;
 
         foreach (Unit playerUnit in TurnManager.Instance.playerUnits)
         {
+            if (playerUnit == null) continue;
+
+            Character playerCharacter = playerUnit.GetComponent<Character>();
+            if (playerCharacter != null && !playerCharacter.IsAlive())
+                continue;
+
             float dist = Vector3.Distance(transform.position, playerUnit.transform.position);
             if (dist < closestDist && dist <= visionRange)
             {
@@ -142,6 +225,15 @@ public class EnemyAI : MonoBehaviour
         }
 
         return closest;
+    }
 
+    IEnumerator AttackinEvil(TMP_Text textoUI, string mensaje)
+    {
+        textoUI.text = mensaje;
+        textoUI.gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(4f);
+
+        textoUI.gameObject.SetActive(false);
     }
 }

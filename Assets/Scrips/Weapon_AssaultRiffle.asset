@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Weapon_AssaultRiffle
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
   weaponName: 
-  weaponDamage: 0
+  weaponDamage: 10
+  weaponPenetration: 0
   armorPenetration: 0
   magazine: 0
   magazineSize: 0

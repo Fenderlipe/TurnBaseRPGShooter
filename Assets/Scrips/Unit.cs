@@ -1,19 +1,24 @@
 using UnityEngine;
+using TMPro;
+using System.Collections;
 
 public class Unit : MonoBehaviour
 {
     [SerializeField] public string characterName;
 
-    public bool hasActed = true;
+    public bool hasActed = false;
     public bool hasAttacked = false;
     public bool hasMoved = false;
     [SerializeField] public bool isFriendly;
     ClickToMove clickToMove;
     Shooting shooting;
-    GameObject targetSelection;
+    [SerializeField] GameObject targetSelection;
     PlayerCharacter playerCharacter;
 
-    public void Awake()
+
+    public TMP_Text endTurn;
+
+    private void Awake()
     {
         clickToMove = GetComponent<ClickToMove>();
         shooting = GetComponent<Shooting>();
@@ -22,6 +27,13 @@ public class Unit : MonoBehaviour
         clickToMove.enabled = false;
         shooting.enabled = false;
     }
+    public void StartTurnForThisUnit()
+    {
+        hasActed = false;
+        hasAttacked = false;
+        hasMoved = false;
+    }
+
 
     public void Run()
     {
@@ -29,15 +41,18 @@ public class Unit : MonoBehaviour
         {
             return;
         }
-        if (isFriendly)
+
+        if (isFriendly && !hasActed && !hasMoved)
         {
             clickToMove.enabled = true;
         }
         else
         {
-            Debug.Log("Unidad enemiga corriendo");
-        }    
-        Debug.Log(characterName + " usa la acción correr");
+            Debug.Log("se mueve pero en malvado");
+        }
+        StartCoroutine(MostrarAccion(endTurn, characterName + " usa la acción de correr"));
+        Debug.Log(characterName + " usa la accion correr");
+        FinishAction();
     }
 
     public void Attack()
@@ -50,16 +65,18 @@ public class Unit : MonoBehaviour
         if (isFriendly)
         {
             playerCharacter.targetSelectionPanel.SetActive(true);
-            shooting.enabled = true;
             targetSelection.SetActive(true);
+            shooting.enabled = true;
+
         }
         else
         {
             Debug.Log("Ataca pero en malvado");
         }
+        StartCoroutine(MostrarAccion(endTurn, characterName + " usa la acción de atacar"));
 
         Debug.Log(characterName + " usa la accion atacar");
-        FinishAttack();
+        //FinishAttack();
     }
 
     public void PassTurn()
@@ -68,42 +85,58 @@ public class Unit : MonoBehaviour
         {
             return;
         }
-        Debug.Log(characterName + " salta su turno");
+        StartCoroutine(MostrarAccion(endTurn, characterName + " finaliza el turno"));
+
+        Debug.Log(characterName + " pasa su turno");
         FinishAction();
     }
 
-
-    public void StartTurnForThisUnit()
+    IEnumerator MostrarAccion(TMP_Text textoUI, string mensaje)
     {
-        hasActed = false;
-        hasAttacked = false;
-        hasMoved = false;
+        textoUI.text = mensaje;
+        textoUI.gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(3f);
+
+        textoUI.gameObject.SetActive(false);
+
     }
+
 
     public void FinishMovement()
     {
+
         clickToMove.enabled = false;
         hasMoved = true;
+
         if (!isFriendly)
         {
-            FinishAction();
+            hasMoved = true;
+            return;
+            //FinishAction();
         }
+
     }
 
     public void FinishAttack()
     {
-        playerCharacter.targetSelectionPanel.SetActive(false);
-        hasAttacked = true;
-        if (!isFriendly)
+
+        if (isFriendly)
         {
             playerCharacter.targetSelectionPanel.SetActive(false);
         }
+
+        hasAttacked = true;
+
+        FinishAction();
 
         /*if (!isFriendly)
         {
             FinishAction();
         }*/
     }
+
+
 
     public void FinishAction()
     {
